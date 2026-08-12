@@ -3,25 +3,41 @@ const items = document.querySelectorAll(".item");
 
 let selectedItem = null;
 
+let startMouseX = 0;
+let startMouseY = 0;
+
 let startX = 0;
 let startY = 0;
 
-let currentX = 0;
-let currentY = 0;
 
-
-// Select cube
+// Mouse down
 items.forEach(function (item) {
 
     item.addEventListener("mousedown", function (event) {
 
         selectedItem = item;
 
-        startX = event.clientX;
-        startY = event.clientY;
+        startMouseX = event.clientX;
+        startMouseY = event.clientY;
 
-        currentX = 0;
-        currentY = 0;
+
+        // Get container position
+        const containerRect =
+            container.getBoundingClientRect();
+
+
+        // Get cube position
+        const itemRect =
+            item.getBoundingClientRect();
+
+
+        // Original position of cube inside container
+        startX =
+            itemRect.left - containerRect.left;
+
+        startY =
+            itemRect.top - containerRect.top;
+
 
         item.classList.add("dragging");
 
@@ -30,28 +46,93 @@ items.forEach(function (item) {
 });
 
 
-// Move cube
+// Mouse move
 document.addEventListener("mousemove", function (event) {
 
     if (selectedItem === null) {
         return;
     }
 
-    const moveX = event.clientX - startX;
-    const moveY = event.clientY - startY;
 
-    currentX = moveX;
-    currentY = moveY;
+    const containerRect =
+        container.getBoundingClientRect();
 
 
-    // Apply movement
+    const itemRect =
+        selectedItem.getBoundingClientRect();
+
+
+    // Mouse movement
+    const mouseMoveX =
+        event.clientX - startMouseX;
+
+    const mouseMoveY =
+        event.clientY - startMouseY;
+
+
+    // New position
+    let newX =
+        startX + mouseMoveX;
+
+    let newY =
+        startY + mouseMoveY;
+
+
+    // Minimum position
+    const minX = 0;
+    const minY = 0;
+
+
+    // Maximum position
+    const maxX =
+        container.clientWidth -
+        selectedItem.offsetWidth;
+
+    const maxY =
+        container.clientHeight -
+        selectedItem.offsetHeight;
+
+
+    // Boundary check - left
+    if (newX < minX) {
+        newX = minX;
+    }
+
+
+    // Boundary check - right
+    if (newX > maxX) {
+        newX = maxX;
+    }
+
+
+    // Boundary check - top
+    if (newY < minY) {
+        newY = minY;
+    }
+
+
+    // Boundary check - bottom
+    if (newY > maxY) {
+        newY = maxY;
+    }
+
+
+    // Calculate movement from original grid position
+    const translateX =
+        newX - startX;
+
+    const translateY =
+        newY - startY;
+
+
+    // Move cube using transform
     selectedItem.style.transform =
-        `translate(${currentX}px, ${currentY}px)`;
+        `translate(${translateX}px, ${translateY}px)`;
 
 });
 
 
-// Release cube
+// Mouse up
 document.addEventListener("mouseup", function () {
 
     if (selectedItem === null) {
