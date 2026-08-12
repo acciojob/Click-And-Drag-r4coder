@@ -1,107 +1,57 @@
-// Your code here.
 const container = document.querySelector(".items");
-
 const items = document.querySelectorAll(".item");
 
 let selectedItem = null;
 
-let offsetX = 0;
-let offsetY = 0;
+let startX = 0;
+let startY = 0;
+
+let currentX = 0;
+let currentY = 0;
 
 
-// Mouse down
+// Select cube
 items.forEach(function (item) {
 
     item.addEventListener("mousedown", function (event) {
 
         selectedItem = item;
 
-        // Add dragging class
+        startX = event.clientX;
+        startY = event.clientY;
+
+        currentX = 0;
+        currentY = 0;
+
         item.classList.add("dragging");
-
-        // Get item position
-        const rect = item.getBoundingClientRect();
-
-        // Find where inside the cube we clicked
-        offsetX = event.clientX - rect.left;
-        offsetY = event.clientY - rect.top;
 
     });
 
 });
 
 
-// Mouse move
+// Move cube
 document.addEventListener("mousemove", function (event) {
 
     if (selectedItem === null) {
         return;
     }
 
-    const containerRect =
-        container.getBoundingClientRect();
+    const moveX = event.clientX - startX;
+    const moveY = event.clientY - startY;
 
-    const itemRect =
-        selectedItem.getBoundingClientRect();
-
-
-    // Calculate new position
-    let newLeft =
-        event.clientX -
-        containerRect.left -
-        offsetX;
-
-    let newTop =
-        event.clientY -
-        containerRect.top -
-        offsetY;
+    currentX = moveX;
+    currentY = moveY;
 
 
-    // Prevent going outside left
-    if (newLeft < 0) {
-        newLeft = 0;
-    }
-
-
-    // Prevent going outside top
-    if (newTop < 0) {
-        newTop = 0;
-    }
-
-
-    // Prevent going outside right
-    if (newLeft + itemRect.width >
-        containerRect.width) {
-
-        newLeft =
-            containerRect.width -
-            itemRect.width;
-    }
-
-
-    // Prevent going outside bottom
-    if (newTop + itemRect.height >
-        containerRect.height) {
-
-        newTop =
-            containerRect.height -
-            itemRect.height;
-    }
-
-
-    // Move the item
-    selectedItem.style.position = "absolute";
-
-    selectedItem.style.left =
-        newLeft + "px";
-
-    selectedItem.style.top =
-        newTop + "px";
+    // Apply movement
+    selectedItem.style.transform =
+        `translate(${currentX}px, ${currentY}px)`;
 
 });
 
 
-// Mouse up
+// Release cube
 document.addEventListener("mouseup", function () {
 
     if (selectedItem === null) {
