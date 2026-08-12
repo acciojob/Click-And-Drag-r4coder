@@ -1,36 +1,23 @@
-* {
-    box-sizing: border-box;
-}
-
-html {
-    background: #ddd;
-}
-
-body {
-    min-height: 100vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-family: sans-serif;
-
-    margin: 0;
-}
-
 .items {
+    width: 1000px;
     height: 800px;
-    width: 90%;
 
-    padding: 40px;
+    padding: 30px;
 
     border: 2px solid white;
-
-    overflow: hidden;
 
     position: relative;
 
     background: rgba(255, 255, 255, 0.3);
+
+    display: grid;
+
+    grid-template-columns: repeat(5, 120px);
+    grid-template-rows: repeat(5, 120px);
+
+    gap: 15px;
+
+    overflow: hidden;
 
     user-select: none;
 }
@@ -43,21 +30,18 @@ body {
     align-items: center;
     justify-content: center;
 
-    position: relative;
-
     font-size: 40px;
     font-weight: bold;
 
     color: white;
 
     cursor: grab;
-
-    margin: 10px;
-
-    float: left;
 }
 
-/* Different colors */
+.item.dragging {
+    cursor: grabbing;
+    z-index: 1000;
+}
 
 .item:nth-child(9n+1) {
     background: dodgerblue;
@@ -93,13 +77,4 @@ body {
 
 .item:nth-child(9n+9) {
     background: rebeccapurple;
-}
-
-
-/* When dragging */
-
-.item.dragging {
-    cursor: grabbing;
-
-    z-index: 1000;
 }
